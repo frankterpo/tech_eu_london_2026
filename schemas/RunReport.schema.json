@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunReport",
+  "type": "object",
+  "properties": {
+    "run_id": { "type": "string", "format": "uuid" },
+    "status": { "type": "string", "enum": ["success", "failed", "error"] },
+    "steps_completed": { "type": "integer" },
+    "steps_total": { "type": "integer" },
+    "error": { "type": "string" },
+    "failure_class": { "type": "string" },
+    "final_url": { "type": "string" },
+    "created_invoice_id": { "type": "string" },
+    "validation_errors": { "type": "array", "items": { "type": "string" } },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "trace_zip": { "type": "string" },
+        "video_webm": { "type": "string" },
+        "last_png": { "type": "string" },
+        "run_report_json": { "type": "string" }
+      }
+    }
+  },
+  "required": ["run_id", "status"]
+}

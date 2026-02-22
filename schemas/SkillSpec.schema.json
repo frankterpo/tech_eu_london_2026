@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SkillSpec",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "version": { "type": "integer", "default": 1 },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "base_url": { "type": "string" },
+    "composite": { "type": "boolean" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string" },
+          "selector": { "type": "string" },
+          "value": { "type": "string" },
+          "search": { "type": "string" },
+          "result": { "type": "string" },
+          "store_as": { "type": "string" },
+          "timeout": { "type": "integer" },
+          "items": { "type": "string" },
+          "skill": { "type": "string" },
+          "skip_if_exists": { "type": "boolean" },
+          "optional": { "type": "boolean", "default": false }
+        },
+        "required": ["action"]
+      }
+    },
+    "slots_schema": { "type": "object" }
+  },
+  "required": ["id", "name", "steps"]
+}

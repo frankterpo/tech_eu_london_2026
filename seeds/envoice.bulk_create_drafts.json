@@ -1,0 +1,55 @@
+{
+  "id": "envoice.bulk_create_drafts",
+  "version": 1,
+  "name": "Bulk Create Draft Invoices",
+  "description": "Creates multiple draft invoices from structured input data. Iterates over a list of invoice requests, creating each via the sales invoice flow. Skips duplicates by checking existing drafts first.",
+  "base_url": "https://app.envoice.eu/desktop",
+  "composite": true,
+  "steps": [
+    {
+      "action": "handle_cookies"
+    },
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/sale/index"
+    },
+    {
+      "action": "wait",
+      "selector": "table.table",
+      "timeout": 10000
+    },
+    {
+      "action": "evaluate",
+      "value": "scan_existing_drafts",
+      "store_as": "existing_drafts"
+    },
+    {
+      "action": "foreach",
+      "items": "{{invoices}}",
+      "skill": "envoice.sales_invoice.existing",
+      "skip_if_exists": true
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "required": ["invoices"],
+    "properties": {
+      "invoices": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "customer": { "type": "string" },
+            "currency": { "type": "string" },
+            "invoice_date": { "type": "string" },
+            "description": { "type": "string" },
+            "quantity": { "type": "string" },
+            "unit": { "type": "string" },
+            "price": { "type": "string" },
+            "tax_rule": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

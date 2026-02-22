@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvalSpec",
+  "type": "object",
+  "properties": {
+    "decision": { "type": "string", "enum": ["success", "failure", "error"] },
+    "failure_class": { "type": "string" },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "patch": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "op": { "type": "string", "enum": ["add", "remove", "replace", "move", "copy", "test"] },
+          "path": { "type": "string" },
+          "value": { "type": "any" }
+        },
+        "required": ["op", "path"]
+      }
+    }
+  },
+  "required": ["decision", "reasons"]
+}

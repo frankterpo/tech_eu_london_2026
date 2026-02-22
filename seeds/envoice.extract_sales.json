@@ -1,0 +1,39 @@
+{
+  "id": "envoice.extract_sales",
+  "version": 1,
+  "name": "Extract Sales Invoices",
+  "description": "Navigate to the Envoice sales index, extract all published invoices from the table, and return structured data. Paginate through all results.",
+  "base_url": "https://app.envoice.eu/desktop",
+  "steps": [
+    {
+      "action": "handle_cookies"
+    },
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/sale/index?status%5B%5D=published"
+    },
+    {
+      "action": "wait",
+      "selector": "table tbody tr",
+      "timeout": 10000
+    },
+    {
+      "action": "screenshot"
+    },
+    {
+      "action": "evaluate",
+      "value": "extract_sales_table",
+      "store_as": "invoices"
+    },
+    {
+      "action": "screenshot"
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "properties": {
+      "status_filter": { "type": "string", "enum": ["published", "draft", "all"], "default": "published" },
+      "max_pages": { "type": "integer", "default": 10 }
+    }
+  }
+}

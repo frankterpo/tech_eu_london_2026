@@ -1,0 +1,102 @@
+{
+  "id": "envoice.purchase_invoice.new",
+  "version": 1,
+  "name": "Create Purchase Invoice",
+  "description": "Create a purchase invoice on Envoice. Selects supplier, sets currency, adds line item, and saves as draft.",
+  "base_url": "https://app.envoice.eu/desktop",
+  "steps": [
+    {
+      "action": "handle_cookies"
+    },
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/purchase/add"
+    },
+    {
+      "action": "wait_for_url",
+      "value": "**/purchase/add**|**/purchase/edit/**",
+      "timeout": 15000
+    },
+    {
+      "action": "select2",
+      "selector": "span[aria-labelledby*='sellerCompanyID'], span[aria-labelledby*='buyerCompanyID']",
+      "search": "input.select2-search__field",
+      "value": "{{supplier}}",
+      "result": ".select2-results__option"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "select2",
+      "selector": "select[name*='total_currency'] + .select2-container .select2-selection",
+      "search": "input.select2-search__field",
+      "value": "{{currency}}",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "wait",
+      "value": "1000"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input[id*='invoice_date']",
+      "value": "{{invoice_date}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name*='row[0][description]']",
+      "value": "{{description}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name*='row[0][item_amount]']",
+      "value": "{{quantity}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name*='row[0][item_price]']",
+      "value": "{{price}}"
+    },
+    {
+      "action": "select2_tax",
+      "selector": "select[name*='row[0][customer_vat_rate_chart_of_accounts_id]'], select[name*='row[0][vat_rate']",
+      "value": "{{tax_rule}}"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "screenshot"
+    },
+    {
+      "action": "click",
+      "selector": "button.btn-primary:has-text('Save')"
+    },
+    {
+      "action": "wait",
+      "value": "3000"
+    },
+    {
+      "action": "check_validation"
+    },
+    {
+      "action": "screenshot"
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "required": ["supplier", "description", "price"],
+    "properties": {
+      "supplier": { "type": "string" },
+      "currency": { "type": "string", "default": "EUR" },
+      "invoice_date": { "type": "string" },
+      "description": { "type": "string" },
+      "quantity": { "type": "string", "default": "1" },
+      "price": { "type": "string" },
+      "tax_rule": { "type": "string", "default": "Main Tax 24%" }
+    }
+  }
+}

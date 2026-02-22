@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.bak
+.env.local
+
+# Auth state (contains session tokens)
+.state/auth/
+
+# Runtime artifacts (videos, traces, screenshots)
+.state/artifacts/
+.state/runs/
+.state/chat_thread.json
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.ruff_cache/
+.pytest_cache/
+*.egg
+
+# Node
+node_modules/
+worker/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+.tmp/

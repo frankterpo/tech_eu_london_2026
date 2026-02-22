@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RouteSpec",
+  "type": "object",
+  "properties": {
+    "skill_id": { "type": "string" },
+    "slots": { "type": "object" },
+    "confidence": { "type": "number" },
+    "reasoning": { "type": "string" }
+  },
+  "required": ["skill_id", "slots", "confidence"]
+}

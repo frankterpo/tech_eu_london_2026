@@ -1,0 +1,19 @@
+{
+  "id": "envoice.sales_invoice.mined_test_20260222",
+  "name": "Create Sales Invoice in Envoice",
+  "description": "Navigates to the Envoice application and initiates the creation of a new sales invoice.",
+  "steps": [
+    {
+      "action": "goto",
+      "url": "https://app.envoice.eu"
+    },
+    {
+      "action": "click",
+      "selector": "text='Invoices'"
+    },
+    {
+      "action": "click",
+      "selector": "text='Create Sales Invoice'"
+    }
+  ]
+}

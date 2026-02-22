@@ -1,0 +1,163 @@
+{
+  "id": "envoice.sales_invoice.new_customer",
+  "version": 1,
+  "name": "Create Sales Invoice (New Customer)",
+  "description": "Create a sales invoice with a brand new customer on Envoice. Creates the contact inline via the 'Add new contact' flow, then fills invoice details.",
+  "base_url": "https://app.envoice.eu/desktop",
+  "steps": [
+    {
+      "action": "handle_cookies"
+    },
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/sale/add"
+    },
+    {
+      "action": "wait_for_url",
+      "value": "**/sale/add**|**/sale/edit/**",
+      "timeout": 15000
+    },
+    {
+      "action": "select2",
+      "selector": "span[aria-labelledby*='buyerCompanyID']",
+      "search": "input.select2-search__field",
+      "value": "{{customer_name}}"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "click",
+      "selector": "a:has-text('Add'), .select2-results__option:has-text('Add')"
+    },
+    {
+      "action": "wait",
+      "value": "3000"
+    },
+    {
+      "action": "fill_if_visible",
+      "selector": "input[name='name']",
+      "value": "{{customer_name}}"
+    },
+    {
+      "action": "fill_if_visible",
+      "selector": "input[name='address']",
+      "value": "{{customer_address}}"
+    },
+    {
+      "action": "fill_if_visible",
+      "selector": "input[name='city']",
+      "value": "{{customer_city}}"
+    },
+    {
+      "action": "fill_if_visible",
+      "selector": "input[name='postal_code']",
+      "value": "{{customer_postal_code}}"
+    },
+    {
+      "action": "fill_if_visible",
+      "selector": "input[name='contact_person_email']",
+      "value": "{{customer_email}}"
+    },
+    {
+      "action": "click",
+      "selector": "button:has-text('Save')"
+    },
+    {
+      "action": "wait",
+      "value": "3000"
+    },
+    {
+      "action": "select2",
+      "selector": "select[name='sales_invoice__total_currency'] + .select2-container .select2-selection",
+      "search": "input.select2-search__field",
+      "value": "{{currency}}",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "wait",
+      "value": "1000"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input#sales_invoice__invoice_date",
+      "value": "{{invoice_date}}"
+    },
+    {
+      "action": "select2",
+      "selector": "select[name='sales_invoice__row[0][product_id]'] + .select2-container .select2-selection",
+      "search": "input.select2-search__field",
+      "value": "General service",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][description]']",
+      "value": "{{description}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][item_amount]']",
+      "value": "{{quantity}}"
+    },
+    {
+      "action": "select_option",
+      "selector": "select[name='sales_invoice__row[0][item_unit_id]']",
+      "value": "{{unit}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][item_price]']",
+      "value": "{{price}}"
+    },
+    {
+      "action": "select2_tax",
+      "selector": "select[name='sales_invoice__row[0][customer_vat_rate_chart_of_accounts_id]']",
+      "value": "{{tax_rule}}"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "screenshot"
+    },
+    {
+      "action": "click",
+      "selector": "button.btn-primary:has-text('Save')"
+    },
+    {
+      "action": "wait",
+      "value": "3000"
+    },
+    {
+      "action": "check_validation"
+    },
+    {
+      "action": "screenshot"
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "required": ["customer_name", "currency", "description", "quantity", "price"],
+    "properties": {
+      "customer_name": { "type": "string" },
+      "customer_address": { "type": "string", "default": "" },
+      "customer_city": { "type": "string", "default": "" },
+      "customer_postal_code": { "type": "string", "default": "" },
+      "customer_email": { "type": "string", "default": "" },
+      "currency": { "type": "string", "enum": ["USD", "EUR", "GBP"], "default": "EUR" },
+      "invoice_date": { "type": "string" },
+      "description": { "type": "string", "default": "General Service" },
+      "quantity": { "type": "string", "default": "1" },
+      "unit": { "type": "string", "default": "month" },
+      "price": { "type": "string" },
+      "tax_rule": { "type": "string", "default": "Service export" }
+    }
+  }
+}

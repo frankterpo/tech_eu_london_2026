@@ -1,0 +1,176 @@
+{
+  "id": "envoice.sales_invoice.existing",
+  "version": 2,
+  "name": "Create Sales Invoice (Existing Customer)",
+  "description": "Create a sales invoice for an existing customer on Envoice. Handles Select2 customer search, currency selection, line item (General Service), tax rule, and saves as draft.",
+  "base_url": "https://app.envoice.eu/desktop",
+  "steps": [
+    {
+      "action": "handle_cookies"
+    },
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/sale/add"
+    },
+    {
+      "action": "wait_for_url",
+      "value": "**/sale/add**|**/sale/edit/**",
+      "timeout": 15000
+    },
+    {
+      "action": "select2",
+      "selector": "span[aria-labelledby*='buyerCompanyID']",
+      "search": "input.select2-search__field",
+      "value": "{{customer}}",
+      "result": ".select2-results__option"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "select2",
+      "selector": "select[name='sales_invoice__total_currency'] + .select2-container .select2-selection",
+      "search": "input.select2-search__field",
+      "value": "{{currency}}",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "wait",
+      "value": "1000"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input#sales_invoice__invoice_date",
+      "value": "{{invoice_date}}"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input#sales_invoice__deadline_date",
+      "value": "{{payment_deadline}}"
+    },
+    {
+      "action": "select2",
+      "selector": "select[name='sales_invoice__row[0][product_id]'] + .select2-container .select2-selection",
+      "search": "input.select2-search__field",
+      "value": "General service",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][description]']",
+      "value": "{{description}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][item_amount]']",
+      "value": "{{quantity}}"
+    },
+    {
+      "action": "select_option",
+      "selector": "select[name='sales_invoice__row[0][item_unit_id]']",
+      "value": "{{unit}}"
+    },
+    {
+      "action": "fill",
+      "selector": "input[name='sales_invoice__row[0][item_price]']",
+      "value": "{{price}}"
+    },
+    {
+      "action": "wait",
+      "value": "1000"
+    },
+    {
+      "action": "select2_tax",
+      "selector": "select[name='sales_invoice__row[0][customer_vat_rate_chart_of_accounts_id]']",
+      "value": "{{tax_rule}}"
+    },
+    {
+      "action": "wait",
+      "value": "2000"
+    },
+    {
+      "action": "screenshot"
+    },
+    {
+      "action": "click",
+      "selector": "button.btn-primary:has-text('Save')"
+    },
+    {
+      "action": "wait",
+      "value": "3000"
+    },
+    {
+      "action": "check_validation"
+    },
+    {
+      "action": "screenshot"
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "required": [
+      "customer",
+      "currency",
+      "description",
+      "quantity",
+      "price",
+      "invoice_date",
+      "payment_deadline"
+    ],
+    "properties": {
+      "customer": {
+        "type": "string",
+        "description": "Partial customer name for Select2 search"
+      },
+      "currency": {
+        "type": "string",
+        "enum": [
+          "USD",
+          "EUR",
+          "GBP"
+        ],
+        "default": "EUR"
+      },
+      "invoice_date": {
+        "type": "string",
+        "description": "Invoice date in DD.MM.YYYY format"
+      },
+      "description": {
+        "type": "string",
+        "default": "General Service"
+      },
+      "quantity": {
+        "type": "string",
+        "default": "1"
+      },
+      "unit": {
+        "type": "string",
+        "enum": [
+          "month",
+          "year",
+          "hour",
+          "piece"
+        ],
+        "default": "month"
+      },
+      "price": {
+        "type": "string",
+        "description": "Net price per unit"
+      },
+      "tax_rule": {
+        "type": "string",
+        "default": "Service export",
+        "description": "Tax rule keyword: 'Service export', 'EU services', 'Main Tax 24%'"
+      },
+      "payment_deadline": {
+        "type": "string",
+        "description": "Payment deadline in DD.MM.YYYY format"
+      }
+    }
+  }
+}
