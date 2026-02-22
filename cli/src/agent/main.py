@@ -2,6 +2,7 @@ import typer
 from rich.console import Console
 from rich.panel import Panel
 from agent.commands import (
+    benchmark,
     bootstrap,
     smoke,
     cloud,
@@ -13,6 +14,9 @@ from agent.commands import (
     loop,
     overview,
     mine,
+    extrapolate,
+    swarm,
+    storage_check,
     chat,
 )
 
@@ -53,12 +57,16 @@ def main(ctx: typer.Context):
 app.command(name="bootstrap")(bootstrap.run)
 app.command(name="smoke-local")(smoke.run_local)
 app.command(name="run")(run_cmd.run_skill)
+app.command(name="benchmark")(benchmark.run_benchmark)
 app.command(name="ask")(ask.ask)
 app.command(name="eval")(eval_cmd.evaluate_run)
 app.command(name="patch")(patch.apply_patch)
 app.command(name="loop")(loop.run_loop)
 app.command(name="overview")(overview.show_overview)
 app.command(name="mine")(mine.mine_workflow)
+app.command(name="extrapolate")(extrapolate.extrapolate)
+app.command(name="swarm")(swarm.run_swarm)
+app.command(name="storage-check")(storage_check.check_storage)
 app.command(name="chat")(chat.start_chat)
 
 # Auth group

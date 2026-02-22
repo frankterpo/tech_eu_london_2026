@@ -76,6 +76,32 @@ def _heuristic_evaluation(report: dict) -> dict:
     }
 
 
+def _apply_strict_gate(eval_data: dict, report: dict) -> dict:
+    heuristic = _heuristic_evaluation(report)
+    decision = str(eval_data.get("decision") or "").lower()
+
+    if heuristic["decision"] == "failure":
+        reasons = eval_data.get("reasons", [])
+        if isinstance(reasons, str):
+            reasons = [reasons]
+        elif not isinstance(reasons, list):
+            reasons = [str(reasons)]
+        if heuristic["reasons"]:
+            reasons.append(f"Strict gate override: {heuristic['reasons'][0]}")
+        eval_data["reasons"] = reasons
+        eval_data["decision"] = "failure"
+        eval_data["failure_class"] = eval_data.get("failure_class") or heuristic.get(
+            "failure_class"
+        )
+        eval_data.setdefault("patch", [])
+        eval_data["strict_gate"] = "overridden"
+        return eval_data
+
+    if decision not in {"success", "failure"}:
+        return heuristic
+    return eval_data
+
+
 def evaluate_run(run_id: str):
     """Evaluate a run using Dust.tt to identify failures and propose patches."""
     sb_url = os.getenv("SUPABASE_URL")
@@ -161,6 +187,8 @@ def evaluate_run(run_id: str):
             "bold yellow",
         )
         eval_data = _heuristic_evaluation(report)
+
+    eval_data = _apply_strict_gate(eval_data, report)
 
     eval_key = f"evals/{run_id}.json"
     local_eval_path = Path(".state/runs/evals") / f"{run_id}.json"

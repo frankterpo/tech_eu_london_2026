@@ -20,6 +20,8 @@ from agent.trace_mining import (
     install_user_interaction_recorder,
     parse_trace_zip_actions,
 )
+from agent.seed_sync import sync_seed_to_supabase
+from agent.skill_spec_utils import normalize_skill_spec
 
 console = Console()
 
@@ -148,10 +150,11 @@ def mine_workflow(
         skill_spec = mined.get("skill_spec") or {}
         if not isinstance(skill_spec, dict) or not skill_spec.get("steps"):
             raise RuntimeError("Multi-agent mining returned empty skill spec.")
-        skill_spec["id"] = name  # Ensure ID matches
-        skill_spec.setdefault("base_url", base_url)
-        skill_spec.setdefault("name", f"Mined Skill: {name}")
-        skill_spec.setdefault("description", "Auto-mined workflow")
+        skill_spec = normalize_skill_spec(
+            skill_spec,
+            default_id=name,
+            default_base_url=base_url,
+        )
     except Exception as e:
         EventLogger.console_log(
             "Agent Miner",
@@ -165,6 +168,14 @@ def mine_workflow(
             "skill_writer": {"fallback": True},
             "skill_critic": {"fallback": True},
         }
+
+    skill_spec = normalize_skill_spec(
+        skill_spec,
+        default_id=name,
+        default_base_url=base_url,
+    )
+    if not skill_spec.get("steps"):
+        skill_spec = infer_skill_from_events(name, base_url, combined_events)
 
     # Validate skill before persisting.
     try:
@@ -186,6 +197,19 @@ def mine_workflow(
         seed_path = Path(f"seeds/{name}.json")
         with open(seed_path, "w", encoding="utf-8") as f:
             json.dump(skill_spec, f, indent=2)
+        try:
+            storage_key = sync_seed_to_supabase(name, seed_path, source="mine")
+            if storage_key:
+                EventLogger.console_log(
+                    "Agent Miner",
+                    f"✓ Seed synced to Supabase: [bold]{storage_key}[/bold]",
+                )
+        except Exception as sync_exc:
+            EventLogger.console_log(
+                "Agent Miner",
+                f"Seed sync skipped ({sync_exc})",
+                "bold yellow",
+            )
 
         # Persist platform memory incrementally.
         platform_map = load_platform_map(platform_id)

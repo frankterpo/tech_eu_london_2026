@@ -35,9 +35,12 @@ def _read_schedule_files() -> List[Path]:
 def show_overview():
     """Show system readiness, recent runs, and recurring invoice schedules."""
     sb_url = config.SUPABASE_URL
-    sb_key = config.SUPABASE_ANON_KEY or config.SUPABASE_API_KEY
+    sb_key = config.supabase_rest_key
     if not sb_url or not sb_key:
-        console.print("[red]Error:[/red] missing Supabase credentials")
+        console.print(
+            "[red]Error:[/red] missing Supabase REST credentials "
+            "(SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY)"
+        )
         raise typer.Exit(1)
 
     headers = {"apikey": sb_key, "Authorization": f"Bearer {sb_key}"}

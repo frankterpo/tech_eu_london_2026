@@ -89,7 +89,8 @@ def save_auth(name: str):
 
     if not sb_url or not sb_key:
         console.print(
-            "[red]Error: SUPABASE_URL or SUPABASE_API_KEY not set. Cannot upload.[/red]"
+            "[red]Error: SUPABASE_URL or Supabase REST key not set "
+            "(SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY). Cannot upload.[/red]"
         )
         raise typer.Exit(1)
 

@@ -3,13 +3,9 @@
 .env.bak
 .env.local
 
-# Auth state (contains session tokens)
-.state/auth/
-
-# Runtime artifacts (videos, traces, screenshots)
-.state/artifacts/
-.state/runs/
-.state/chat_thread.json
+# Runtime state (auth/session/artifacts/platform memory/bench data)
+.state/
+.sandboxes/
 
 # Python
 __pycache__/

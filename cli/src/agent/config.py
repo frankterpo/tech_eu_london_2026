@@ -18,8 +18,10 @@ class EnvConfig(BaseSettings):
     CLOUDFLARE_ACCOUNT_ID: str
 
     SUPABASE_URL: str
-    SUPABASE_API_KEY: str
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = None
     SUPABASE_ANON_KEY: Optional[str] = None
+    SUPABASE_API_KEY: Optional[str] = None  # Legacy fallback key name.
+    SUPABASE_ACCESS_TOKEN: Optional[str] = None  # Supabase CLI token.
 
     DUST_API_KEY: Optional[str] = None
     DUST_WORKSPACE_ID: Optional[str] = None
@@ -44,6 +46,26 @@ class EnvConfig(BaseSettings):
             return None
         key = key.strip()
         return key or None
+
+    @property
+    def supabase_rest_key(self) -> Optional[str]:
+        return (
+            self.SUPABASE_SERVICE_ROLE_KEY
+            or self.SUPABASE_ANON_KEY
+            or (
+                self.SUPABASE_API_KEY
+                if self.SUPABASE_API_KEY and self.SUPABASE_API_KEY.startswith("eyJ")
+                else None
+            )
+        )
+
+    @property
+    def supabase_access_token(self) -> Optional[str]:
+        return self.SUPABASE_ACCESS_TOKEN or (
+            self.SUPABASE_API_KEY
+            if self.SUPABASE_API_KEY and self.SUPABASE_API_KEY.startswith("sbp_")
+            else None
+        )
 
 
 config = EnvConfig()

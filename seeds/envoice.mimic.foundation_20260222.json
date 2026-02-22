@@ -1,0 +1,375 @@
+{
+  "id": "envoice.mimic.foundation_20260222",
+  "version": 1,
+  "name": "Mined workflow on app.envoice.eu",
+  "description": "Auto-mined from real mimic interaction events.",
+  "base_url": "https://app.envoice.eu",
+  "steps": [
+    {
+      "action": "goto",
+      "value": "https://app.envoice.eu/desktop/user/login"
+    },
+    {
+      "action": "fill",
+      "selector": "input#email",
+      "value": "{{email}}"
+    },
+    {
+      "action": "click",
+      "selector": "button#login_button_js"
+    },
+    {
+      "action": "click",
+      "selector": "nav.navbar.navbar-fixed-top > div.collapse.navbar-collapse > ul.nav.navbar-nav > li:nth-of-type(2) > a"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.invoice > td.text-right > a.btn.btn-xs"
+    },
+    {
+      "action": "click",
+      "selector": "div.row > div.col-sm-6.col-lg-7 > div.form-group > div.col-md-12 > a.btn.btn-lg"
+    },
+    {
+      "action": "click",
+      "selector": "div.bootbox.modal > div.modal-dialog > div.modal-content > div.modal-footer > button.btn.btn-warning"
+    },
+    {
+      "action": "click",
+      "selector": "div.col-sm-12.col-lg-offset-1 > div.hpanel > div.panel-heading.m-t-lg > div.pull-left > a.btn.btn-md"
+    },
+    {
+      "action": "click",
+      "selector": "span#select2-buyerCompanyID-container"
+    },
+    {
+      "action": "select_option",
+      "selector": "body.auth > span.select2-container.select2-container--bootstrap > span.select2-dropdown.bigdrop > span.select2-search.select2-search--dropdown > input.select2-search__field",
+      "value": "{{body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body > div:nth-of-type(2) > div.form-group.m-b > div.col-md-8.col-md-offset-4 > a.btn.btn-default"
+    },
+    {
+      "action": "click",
+      "selector": "input#company__address"
+    },
+    {
+      "action": "click",
+      "selector": "input#company__contact_email"
+    },
+    {
+      "action": "click",
+      "selector": "form.form.form-horizontal > div.modal-footer > div.row > div.col-md-12 > button.btn.btn-md"
+    },
+    {
+      "action": "click",
+      "selector": "input#sales_invoice__invoice_date"
+    },
+    {
+      "action": "click",
+      "selector": "div.datepicker-days > table.table-condensed > thead > tr:nth-of-type(2) > th.next"
+    },
+    {
+      "action": "click",
+      "selector": "div.datepicker-days > table.table-condensed > thead > tr:nth-of-type(2) > th.prev"
+    },
+    {
+      "action": "click",
+      "selector": "div.datepicker-days > table.table-condensed > tbody > tr:nth-of-type(2) > td.day"
+    },
+    {
+      "action": "click",
+      "selector": "div.bootbox.modal > div.modal-dialog > div.modal-content > div.modal-footer > button.btn.btn-warning"
+    },
+    {
+      "action": "click",
+      "selector": "input#sales_invoice__transaction_date"
+    },
+    {
+      "action": "click",
+      "selector": "div.datepicker-days > table.table-condensed > tbody > tr:nth-of-type(1) > td.old.day"
+    },
+    {
+      "action": "click",
+      "selector": "div.row > div.col-md-6 > div.hpanel > div.panel-body > div.form-group"
+    },
+    {
+      "action": "click",
+      "selector": "input#due_days"
+    },
+    {
+      "action": "click",
+      "selector": "input#sales_invoice__transaction_date"
+    },
+    {
+      "action": "click",
+      "selector": "input#sales_invoice__invoice_date"
+    },
+    {
+      "action": "click",
+      "selector": "form.form.form-horizontal > div.row > div.col-md-6 > div.hpanel > div.panel-body"
+    },
+    {
+      "action": "click",
+      "selector": "input#sales_invoice__transaction_date"
+    },
+    {
+      "action": "click",
+      "selector": "form.form.form-horizontal > div.row > div.col-md-6 > div.hpanel > div.panel-body"
+    },
+    {
+      "action": "click",
+      "selector": "input#due_days"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input#due_days",
+      "value": "{{due_days}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.col-md-6 > div.hpanel > div.panel-body > div.form-group > div.col-md-8"
+    },
+    {
+      "action": "click",
+      "selector": "input#due_days"
+    },
+    {
+      "action": "fill_date",
+      "selector": "input#due_days",
+      "value": "{{due_days}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.col-md-6 > div.hpanel > div.panel-body > div.form-group > div.col-md-8"
+    },
+    {
+      "action": "click",
+      "selector": "span#select2-sales_invoice__seller_user_id-container"
+    },
+    {
+      "action": "click",
+      "selector": "span#select2-sales_invoice__total_currency-container"
+    },
+    {
+      "action": "click",
+      "selector": "div.hpanel > div.panel-body > div.form-group > div.col-md-8 > div.row"
+    },
+    {
+      "action": "select2",
+      "selector": "span.selection > span.select2-selection.select2-selection--single > span.select2-selection__rendered > span.select2-selection__placeholder > span",
+      "value": "{{span_selection_span_select2_selection_select2_selection_single_span_select2_selection__rendered_span_select2_selection__placeholder_span}}",
+      "search": "input.select2-search__field",
+      "result": ".select2-results__option--highlighted"
+    },
+    {
+      "action": "select_option",
+      "selector": "body.auth > span.select2-container.select2-container--bootstrap > span.select2-dropdown.bigdrop > span.select2-search.select2-search--dropdown > input.select2-search__field",
+      "value": "{{body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field}}"
+    },
+    {
+      "action": "fill",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(2) > input[name='sales_invoice__row[0][item_amount]']",
+      "value": "{{row_item_amount}}"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(1) > input[name='sales_invoice__row[0][description]']"
+    },
+    {
+      "action": "fill",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(1) > input[name='sales_invoice__row[0][description]']",
+      "value": "{{row_description}}"
+    },
+    {
+      "action": "click",
+      "selector": "select#productUnit"
+    },
+    {
+      "action": "select_option",
+      "selector": "select#productUnit",
+      "value": "{{productunit}}"
+    },
+    {
+      "action": "click",
+      "selector": "select#productUnit"
+    },
+    {
+      "action": "click",
+      "selector": "tbody > tr.invoice-row > td:nth-of-type(4) > div.input-group > input[name='sales_invoice__row[0][item_price]']"
+    },
+    {
+      "action": "fill",
+      "selector": "tbody > tr.invoice-row > td:nth-of-type(4) > div.input-group > input[name='sales_invoice__row[0][item_price]']",
+      "value": "{{row_item_price}}"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(6) > input[name='sales_invoice__row[0][discount_percent]']"
+    },
+    {
+      "action": "fill",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(6) > input[name='sales_invoice__row[0][discount_percent]']",
+      "value": "{{row_discount_percent}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body.p-x-0 > table.table.table-hover > tfoot > tr > td.text-right"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(6) > input[name='sales_invoice__row[0][discount_percent]']"
+    },
+    {
+      "action": "fill",
+      "selector": "table.table.table-hover > tbody > tr.invoice-row > td:nth-of-type(6) > input[name='sales_invoice__row[0][discount_percent]']",
+      "value": "{{row_discount_percent}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body.p-x-0 > table.table.table-hover > tbody > tr.row-info.text-muted > td.dimensions.text-right"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.currency_total.vat-container > td.text-right > span.vat_total_sum"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body.p-x-0 > table.table.table-hover > tbody > tr.invoice-row > td.text-center"
+    },
+    {
+      "action": "click",
+      "selector": "select#sales_invoice__row[0][customer_vat_rate_chart_of_accounts_id]"
+    },
+    {
+      "action": "select_option",
+      "selector": "select#sales_invoice__row[0][customer_vat_rate_chart_of_accounts_id]",
+      "value": "{{row}}"
+    },
+    {
+      "action": "click",
+      "selector": "select#sales_invoice__row[0][customer_vat_rate_chart_of_accounts_id]"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body.p-x-0 > table.table.table-hover > tbody > tr.invoice-row > td.text-center"
+    },
+    {
+      "action": "click",
+      "selector": "div.row > div.col-md-4.col-sm-5 > div.form-group > div.col-md-12 > button.btn.btn-lg"
+    },
+    {
+      "action": "click",
+      "selector": "nav.navbar.navbar-fixed-top > div.collapse.navbar-collapse > ul.nav.navbar-nav > li.active > a"
+    },
+    {
+      "action": "click",
+      "selector": "table.table.table-hover > tbody > tr.invoice > td.text-right > a.btn.btn-xs"
+    },
+    {
+      "action": "click",
+      "selector": "div.row > div.col-sm-6.col-lg-7 > div.form-group > div.col-md-12 > a.btn.btn-lg"
+    },
+    {
+      "action": "click",
+      "selector": "div.bootbox.modal > div.modal-dialog > div.modal-content > div.modal-footer > button.btn.btn-warning"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body > table.table.table-hover > tbody > tr.invoice > td:nth-of-type(4)"
+    },
+    {
+      "action": "click",
+      "selector": "span#select2-company_id-container"
+    },
+    {
+      "action": "select_option",
+      "selector": "body.auth > span.select2-container.select2-container--bootstrap > span.select2-dropdown.bigdrop > span.select2-search.select2-search--dropdown > input.select2-search__field",
+      "value": "{{body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field}}"
+    },
+    {
+      "action": "click",
+      "selector": "div.well.well-filter > form.form.filter-form > div.row > div.col-md-6.text-right > button.btn.btn-sm"
+    },
+    {
+      "action": "click",
+      "selector": "div.panel-body > table.table.table-hover > tbody > tr.invoice > td.text-left"
+    },
+    {
+      "action": "click",
+      "selector": "div.row > div.col-sm-12.col-lg-offset-1 > div.hpanel > div.panel-heading.m-t-lg > div.clearfix"
+    },
+    {
+      "action": "screenshot"
+    }
+  ],
+  "slots_schema": {
+    "type": "object",
+    "required": [
+      "email",
+      "body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field",
+      "due_days",
+      "span_selection_span_select2_selection_select2_selection_single_span_select2_selection__rendered_span_select2_selection__placeholder_span",
+      "row_item_amount",
+      "row_description",
+      "productunit",
+      "row_item_price",
+      "row_discount_percent",
+      "row"
+    ],
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "Value for email",
+        "default": "francisco@tryspecter.com"
+      },
+      "body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field": {
+        "type": "string",
+        "description": "Value for body_auth_span_select2_container_select2_container_bootstrap_span_select2_dropdown_bigdrop_span_select2_search_select2_search_dropdown_input_select2_search__field",
+        "default": "accel"
+      },
+      "due_days": {
+        "type": "string",
+        "description": "Value for due_days",
+        "default": "14"
+      },
+      "span_selection_span_select2_selection_select2_selection_single_span_select2_selection__rendered_span_select2_selection__placeholder_span": {
+        "type": "string",
+        "description": "Value for span_selection_span_select2_selection_select2_selection_single_span_select2_selection__rendered_span_select2_selection__placeholder_span",
+        "default": "s"
+      },
+      "row_item_amount": {
+        "type": "string",
+        "description": "Value for row_item_amount",
+        "default": "1"
+      },
+      "row_description": {
+        "type": "string",
+        "description": "Value for row_description",
+        "default": "Specter Data"
+      },
+      "productunit": {
+        "type": "string",
+        "description": "Value for productunit",
+        "default": "year"
+      },
+      "row_item_price": {
+        "type": "string",
+        "description": "Value for row_item_price",
+        "default": "30000"
+      },
+      "row_discount_percent": {
+        "type": "string",
+        "description": "Value for row_discount_percent",
+        "default": "1.6"
+      },
+      "row": {
+        "type": "string",
+        "description": "Value for row",
+        "default": "Main Tax 20% - Non-EU 20%"
+      }
+    }
+  }
+}

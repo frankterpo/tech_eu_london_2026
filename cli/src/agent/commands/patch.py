@@ -6,6 +6,7 @@ import json
 import jsonpatch
 from pathlib import Path
 from jsonschema import ValidationError, validate
+from agent.seed_sync import sync_seed_to_supabase
 from agent.supabase_auth import get_supabase_key
 
 console = Console()
@@ -127,6 +128,12 @@ def apply_patch(skill_id: str, eval_key: str):
         # 4. Save patched skill back to seeds (and later to DB)
         with open(seed_path, "w") as f:
             json.dump(patched_skill, f, indent=2)
+        try:
+            storage_key = sync_seed_to_supabase(skill_id, seed_path, source="patch")
+            if storage_key:
+                console.print(f"  Supabase seed sync: [bold]{storage_key}[/bold]")
+        except Exception as sync_exc:
+            console.print(f"  [yellow]Seed sync skipped ({sync_exc})[/yellow]")
 
         console.print(
             f"\n[bold green]✓ Skill '{skill_id}' patched successfully![/bold green]"

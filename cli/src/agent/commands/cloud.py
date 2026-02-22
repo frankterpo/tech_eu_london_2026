@@ -13,12 +13,14 @@ console = Console()
 
 
 def _check_supabase() -> Tuple[bool, str]:
-    if not config.SUPABASE_URL or not (
-        config.SUPABASE_ANON_KEY or config.SUPABASE_API_KEY
-    ):
-        return False, "missing SUPABASE_URL or key"
+    key = config.supabase_rest_key
+    if not config.SUPABASE_URL or not key:
+        return (
+            False,
+            "missing SUPABASE_URL or Supabase REST key "
+            "(SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY)",
+        )
 
-    key = config.SUPABASE_ANON_KEY or config.SUPABASE_API_KEY
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
     try:
         resp = httpx.get(

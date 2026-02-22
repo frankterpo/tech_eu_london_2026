@@ -13,6 +13,9 @@ from agent.platform_memory import (
     platform_map_digest,
     save_platform_map,
 )
+from agent.platform_extrapolation import extrapolate_skill_from_platform_map
+from agent.seed_sync import sync_seed_to_supabase
+from agent.skill_spec_utils import normalize_skill_spec
 
 
 def _slugify(text: str, max_len: int = 48) -> str:
@@ -45,6 +48,24 @@ def _ensure_unique_skill_id(candidate: str) -> str:
     return f"{candidate}_{ts}"
 
 
+def _has_ambiguous_invoice_row_selector(skill_spec: Dict[str, Any]) -> bool:
+    steps = skill_spec.get("steps") or []
+    if not isinstance(steps, list):
+        return False
+    for step in steps:
+        if not isinstance(step, dict):
+            continue
+        if step.get("action") not in {"fill", "fill_if_visible"}:
+            continue
+        selector = str(step.get("selector") or "").lower()
+        if "sales_invoice__row[0]" in selector and not any(
+            part in selector
+            for part in ("[description]", "[item_amount]", "[item_qty]")
+        ):
+            return True
+    return False
+
+
 def synthesize_skill_for_prompt(
     *,
     prompt: str,
@@ -63,26 +84,64 @@ def synthesize_skill_for_prompt(
             f"{platform_id}.auto.{_slugify(prompt, max_len=36)}"
         )
 
-    dust = DustClient()
-    generated = dust.synthesize_skill_from_prompt(
-        skill_id=target_skill_id,
-        prompt=prompt,
-        platform_map_digest=digest,
-        available_skill_ids=available_skill_ids,
-        agent_id=agent_id,
-    )
-    skill_spec = generated.get("skill_spec") or {}
-    if not isinstance(skill_spec, dict):
-        raise RuntimeError("Synthesized skill is not a JSON object.")
+    generated: Dict[str, Any] = {}
+    skill_spec: Dict[str, Any] = {}
+    dust_error: Optional[str] = None
+    try:
+        dust = DustClient()
+        generated = dust.synthesize_skill_from_prompt(
+            skill_id=target_skill_id,
+            prompt=prompt,
+            platform_map_digest=digest,
+            available_skill_ids=available_skill_ids,
+            agent_id=agent_id,
+        )
+        maybe = generated.get("skill_spec") or {}
+        if isinstance(maybe, dict):
+            skill_spec = maybe
+        else:
+            dust_error = "Synthesized skill is not a JSON object."
+    except Exception as exc:
+        dust_error = str(exc)
+        generated = {"error": dust_error}
 
-    skill_spec["id"] = _ensure_unique_skill_id(
-        str(skill_spec.get("id") or target_skill_id)
+    if not skill_spec:
+        skill_spec = extrapolate_skill_from_platform_map(
+            prompt=prompt,
+            platform_map=platform_map,
+            skill_id=target_skill_id,
+            default_base_url=(platform_map.get("base_urls") or ["https://app.envoice.eu"])[
+                0
+            ],
+        )
+        generated["platform_map_fallback"] = True
+        if dust_error:
+            generated["dust_error"] = dust_error
+
+    skill_spec = normalize_skill_spec(
+        skill_spec,
+        default_id=target_skill_id,
+        default_base_url=(platform_map.get("base_urls") or ["https://app.envoice.eu"])[0],
     )
-    skill_spec.setdefault("version", 1)
-    skill_spec.setdefault("name", f"Auto-generated skill for: {prompt[:48]}")
-    skill_spec.setdefault("description", "Synthesized from prompt and platform map.")
-    skill_spec.setdefault("steps", [])
-    skill_spec.setdefault("slots_schema", {"type": "object", "properties": {}})
+    if _has_ambiguous_invoice_row_selector(skill_spec):
+        skill_spec = extrapolate_skill_from_platform_map(
+            prompt=prompt,
+            platform_map=platform_map,
+            skill_id=target_skill_id,
+            default_base_url=(platform_map.get("base_urls") or ["https://app.envoice.eu"])[
+                0
+            ],
+        )
+        generated["platform_map_fallback"] = True
+        generated["fallback_reason"] = "ambiguous_invoice_row_selector"
+        skill_spec = normalize_skill_spec(
+            skill_spec,
+            default_id=target_skill_id,
+            default_base_url=(platform_map.get("base_urls") or ["https://app.envoice.eu"])[
+                0
+            ],
+        )
+    skill_spec["id"] = _ensure_unique_skill_id(str(skill_spec.get("id") or target_skill_id))
 
     if not skill_spec.get("steps"):
         raise RuntimeError("Synthesized skill has no steps.")
@@ -98,6 +157,13 @@ def synthesize_skill_for_prompt(
     seed_path.parent.mkdir(parents=True, exist_ok=True)
     with open(seed_path, "w", encoding="utf-8") as f:
         json.dump(skill_spec, f, indent=2)
+    seed_storage_key: Optional[str] = None
+    try:
+        seed_storage_key = sync_seed_to_supabase(
+            skill_spec["id"], seed_path, source="synth"
+        )
+    except Exception:
+        seed_storage_key = None
 
     platform_map = merge_platform_signals(
         platform_map=platform_map,
@@ -111,6 +177,7 @@ def synthesize_skill_for_prompt(
     return {
         "skill_id": skill_spec["id"],
         "seed_path": str(seed_path),
+        "seed_storage_key": seed_storage_key,
         "platform_map_path": str(map_path),
         "skill_spec": skill_spec,
         "agent_outputs": generated,

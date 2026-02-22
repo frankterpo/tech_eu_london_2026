@@ -37,7 +37,10 @@ def run_skill(skill_id: str, input_file: Optional[Path] = None) -> str:
     sb_key = get_supabase_key()
 
     if not sb_url or not sb_key:
-        console.print("[red]Error: SUPABASE_URL or SUPABASE_API_KEY not set.[/red]")
+        console.print(
+            "[red]Error: SUPABASE_URL or Supabase REST key not set "
+            "(SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY).[/red]"
+        )
         raise typer.Exit(1)
 
     # 1. Load Skill Spec
@@ -144,7 +147,7 @@ def run_skill(skill_id: str, input_file: Optional[Path] = None) -> str:
             continue
 
         file_name = os.path.basename(local_path)
-        storage_path = f"artifacts/{run_id}/{file_name}"
+        storage_path = f"artifacts/runs/{run_id}/{file_name}"
 
         with open(local_path, "rb") as f:
             file_content = f.read()
