@@ -109,6 +109,6 @@ agent loop "Create a sales invoice..." --iters 3
 
 ## 🏆 Hackathon Submission
 - **Created:** Newly created at Tech EU London 2026.
-- **Team Size:** 1 (Independent Developer).
+- **Team Size:** 1 (Francisco Terpolilli).
 - **Partner Tech:** Dust.tt, Google Gemini, Supabase, Lovable.
 - **Video Demo:** [Watch the 2-min demo on Loom](https://www.loom.com/share/a5d23850395342e8a05081f9c214d11a)
